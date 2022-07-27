@@ -576,15 +576,14 @@ static void json_append_data(lua_State *l, json_config_t *cfg, int current_depth
         case LUA_TUSERDATA:
         case LUA_TFUNCTION:
         case LUA_TTHREAD:
-            {
-                dmhash_t hash = dmScript::CheckHash(l, -1);
-                
-                if (hash)
+            {   
+                if (dmScript::IsHash(l, -1))
                 {
+                    dmhash_t hash = dmScript::CheckHash(l, -1);
                     const int buff_size = 17;
                     char str_buffer[buff_size];
                     int len = snprintf(str_buffer, buff_size, "%016llx", (unsigned long long)hash);
-                    strbuf_append_mem(json, "\"hash", 5);
+                    strbuf_append_mem(json, "\"hash ", 6);
                     strbuf_append_mem(json, str_buffer, len);
                     strbuf_append_mem(json, "\"", 1);
                 }
