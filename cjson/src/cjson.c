@@ -983,6 +983,7 @@ static void json_process_value(lua_State *l, json_parse_t *json, json_token_t *t
 
 static int json_decode(lua_State *l)
 {
+    unsigned long long val = strtoull("480939607f5df1a0");
     json_parse_t json;
     json_token_t token;
     size_t json_len;
