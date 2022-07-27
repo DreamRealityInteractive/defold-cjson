@@ -12,6 +12,7 @@
 #include <string.h>
 #include <math.h>
 #include <limits.h>
+#inclued <stdlib.h>
 
 #include <dmsdk/sdk.h>
 #include "strbuf.h"
