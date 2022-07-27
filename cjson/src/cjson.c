@@ -12,6 +12,7 @@
 #include <string.h>
 #include <math.h>
 #include <limits.h>
+#include <stdlib.h>
 
 #include <dmsdk/sdk.h>
 #include "strbuf.h"
@@ -968,11 +969,24 @@ static void json_parse_array_context(lua_State *l, json_parse_t *json)
     }
 }
 
+static void json_process_string(lua_State *l, string s, int string_len)
+{
+    const char* cstr = s.c_str();
+    if (string_len == 21 && strncmp(cstr, "hash ", 5) == 0)
+    {
+        unsigned long long hash = strtoull(cstr + 5, NULL, 16);
+        dmScript.PushHash(l, hash);
+    }
+    else
+    {
+    lua_pushlstring(l, s, string_len);
+}
+
 static void json_process_value(lua_State *l, json_parse_t *json, json_token_t *token)
 {
     switch (token->type) {
     case T_STRING:
-        lua_pushlstring(l, token->value.string, token->string_len);
+        json_process_string(l, token->value.string, token->string_len);
         break;;
     case T_NUMBER:
         lua_pushnumber(l, token->value.number);
