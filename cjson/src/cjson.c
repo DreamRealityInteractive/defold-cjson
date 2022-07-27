@@ -969,17 +969,17 @@ static void json_parse_array_context(lua_State *l, json_parse_t *json)
     }
 }
 
-static void json_process_string(lua_State *l, string s, int string_len)
+static void json_process_string(lua_State *l, const char* s, int string_len)
 {
-    const char* cstr = s.c_str();
-    if (string_len == 21 && strncmp(cstr, "hash ", 5) == 0)
+    if (string_len == 21 && strncmp(s, "hash ", 5) == 0)
     {
-        unsigned long long hash = strtoull(cstr + 5, NULL, 16);
-        dmScript.PushHash(l, hash);
+        unsigned long long hash = strtoull(s + 5, NULL, 16);
+        dmScript::PushHash(l, hash);
     }
     else
     {
-    lua_pushlstring(l, s, string_len);
+       lua_pushlstring(l, s, string_len);
+    }
 }
 
 static void json_process_value(lua_State *l, json_parse_t *json, json_token_t *token)
