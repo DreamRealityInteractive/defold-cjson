@@ -588,6 +588,20 @@ static void json_append_data(lua_State *l, json_config_t *cfg, int current_depth
                     strbuf_append_mem(json, str_buffer, len);
                     strbuf_append_mem(json, "\"", 1);
                 }
+                else if (dmScript::IsVector3(l, -1))
+                {
+                    dmVMath::Vector3* vector3 = dmScript::CheckVector3(l, -1);
+                    
+                    if (vector3)
+                    {
+                        const int buff_size = 64;
+                        char str_buffer[buff_size];
+                        int len = snprintf(str_buffer, buff_size, "%.9g,%.9g,%.9g", vector3.X, vector3.Y, vector3.Z);
+                        strbuf_append_mem(json, "\"vector3 ", 9);
+                        strbuf_append_mem(json, str_buffer, len);
+                        strbuf_append_mem(json, "\"", 1);
+                    }
+                }
                 else
                 {
                     unsigned long long pointer_addr = (unsigned long long)lua_topointer(l, -1);
@@ -971,10 +985,16 @@ static void json_parse_array_context(lua_State *l, json_parse_t *json)
 
 static void json_process_string(lua_State *l, const char* s, int string_len)
 {
-    if (string_len == 21 && strncmp(s, "hash ", 5) == 0)
+    if (strncmp(s, "hash ", 5) == 0)
     {
         unsigned long long hash = strtoull(s + 5, NULL, 16);
         dmScript::PushHash(l, hash);
+    }
+    else if (strncmp(s, "vector3 ", 8) == 0)
+    {
+        float x, y, z;
+        sscanf(s + 8, "%f,%f,%f", &x, &y, &z);
+        dmScript::PushVector3(l, Vector3(x, y, z));
     }
     else
     {
