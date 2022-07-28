@@ -596,7 +596,7 @@ static void json_append_data(lua_State *l, json_config_t *cfg, int current_depth
                     {
                         const int buff_size = 64;
                         char str_buffer[buff_size];
-                        int len = snprintf(str_buffer, buff_size, "%.9g,%.9g,%.9g", vector3.X, vector3.Y, vector3.Z);
+                        int len = snprintf(str_buffer, buff_size, "%.9g,%.9g,%.9g", vector3->X, vector3->Y, vector3->Z);
                         strbuf_append_mem(json, "\"vector3 ", 9);
                         strbuf_append_mem(json, str_buffer, len);
                         strbuf_append_mem(json, "\"", 1);
@@ -994,7 +994,7 @@ static void json_process_string(lua_State *l, const char* s, int string_len)
     {
         float x, y, z;
         sscanf(s + 8, "%f,%f,%f", &x, &y, &z);
-        dmScript::PushVector3(l, Vector3(x, y, z));
+        dmScript::PushVector3(l, dmVMath::Vector3(x, y, z));
     }
     else
     {
